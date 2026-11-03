@@ -1,0 +1,8 @@
+{
+  "meta": {
+    "name": "Hitomi extension repo",
+    "shortName": "Hitomi",
+    "website": "https://hitomi.la",
+    "signingKeyFingerprint": "5ffca76f1a68bad3172fefffaa62a64bfeac659447fade92d56eb2e280483f8f"
+  }
+}
