@@ -27,11 +27,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      # The APK must always be signed with the same key, which lives in GitHub secrets (see README).
-      - name: Skip when no signing key is configured
-        if: env.HAS_SIGNING_KEY != 'true'
-        run: echo "::warning::SIGNING_KEY secret not set, nothing built. The existing repo branch is kept."
-
+      # Optional: use your own key stored in GitHub secrets instead of signingkey.jks
       - name: Decode signing key from secrets
         if: env.HAS_SIGNING_KEY == 'true'
         env:
@@ -44,17 +40,14 @@ jobs:
           echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> "$GITHUB_ENV"
 
       - name: Build APK
-        if: env.HAS_SIGNING_KEY == 'true'
         run: |
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
 
       - name: Generate repo files
-        if: env.HAS_SIGNING_KEY == 'true'
         run: python3 scripts/make_repo.py "$RUNNER_TEMP/repo"
 
       - name: Publish to the `repo` branch
-        if: env.HAS_SIGNING_KEY == 'true'
         run: |
           cd "$RUNNER_TEMP/repo"
           git init -q -b repo

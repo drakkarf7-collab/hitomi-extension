@@ -94,6 +94,7 @@ class Hitomi(
             }
             val fullQuery = terms.joinToString(" ")
             val parsed = searcher.parse(fullQuery, hitomiLang, orderBy, orderByKey)
+            if (page == 1) searcher.validateTags(parsed)
 
             if (parsed.isSimple) {
                 val state = parsed.positive.firstOrNull()

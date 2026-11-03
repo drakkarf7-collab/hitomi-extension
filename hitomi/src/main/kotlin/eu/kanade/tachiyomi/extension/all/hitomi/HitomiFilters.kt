@@ -36,8 +36,12 @@ class TypeFilter : Filter.Select<String>("Type", TYPES.map { it.first }.toTypedA
 }
 
 open class TermFilter(name: String, val prefix: String) : Filter.Text(name) {
-    /** Comma separated values, "-value" excludes. Spaces become "_" like on the site. */
-    fun terms(): List<String> = state.split(',')
+    /**
+     * Values separated by "," or ";" (or spaces between "ns:value" tags), "-value" excludes.
+     * Spaces inside a value become "_" like on the site.
+     */
+    fun terms(): List<String> = state.split(',', ';')
+        .flatMap { it.trim().split(Regex("""\s+(?=-?[a-z]+:)""")) }
         .map { it.trim() }
         .filter { it.isNotEmpty() }
         .map { value ->
@@ -48,18 +52,18 @@ open class TermFilter(name: String, val prefix: String) : Filter.Text(name) {
         }
 }
 
-class TagFilter : TermFilter("Tags (female:x, male:x, tag:x; -x to exclude)", "tag")
+class TagFilter : TermFilter("Tags (e.g. female:monster girl, male:glasses, -female:futanari)", "tag")
 class ArtistFilter : TermFilter("Artists", "artist")
 class GroupFilter : TermFilter("Groups", "group")
 class SeriesFilter : TermFilter("Series", "series")
 class CharacterFilter : TermFilter("Characters", "character")
 
 fun hitomiFilters() = FilterList(
-    Filter.Header("Text search supports the site syntax: female:yuri -male:x language:french type:manga"),
+    Filter.Header("Search box uses the site syntax, _ for spaces: female:monster_girl -male:x language:french"),
     SortFilter(),
     TypeFilter(),
     Filter.Separator(),
-    Filter.Header("Comma separated, prefix with - to exclude"),
+    Filter.Header("Separate with , or ; and prefix with - to exclude"),
     TagFilter(),
     ArtistFilter(),
     GroupFilter(),

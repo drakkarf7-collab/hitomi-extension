@@ -82,6 +82,25 @@ class HitomiSearch(
         return bytes.toIntList()
     }
 
+    /**
+     * Throws a readable error for tags that don't exist on the site (e.g. "female:monster" instead of
+     * "female:monster_girl"), instead of silently returning no results.
+     */
+    fun validateTags(q: ParsedQuery) {
+        val tags = (q.positive + q.negative + q.orGroups.flatten()).filter { it.contains(':') }.distinct()
+        val unknown = tags.filterNot { term ->
+            val state = stateForTerm(term, State()).copy(orderBy = "date", orderByKey = "added")
+            val reqHeaders = headers.newBuilder().set("Range", "bytes=0-3").set("Accept-Encoding", "identity").build()
+            client.newCall(GET(nozomiUrl(state), reqHeaders)).execute().use { it.code != 404 }
+        }
+        if (unknown.isNotEmpty()) {
+            throw Exception(
+                "Unknown tag: ${unknown.joinToString { it.replace(' ', '_') }}. " +
+                    "Check the exact name on hitomi.la, use _ for spaces (e.g. female:monster_girl)",
+            )
+        }
+    }
+
     // ---- query parsing ------------------------------------------------------
 
     class ParsedQuery(
@@ -98,7 +117,9 @@ class HitomiSearch(
     }
 
     fun parse(query: String, language: String, orderBy: String, orderByKey: String): ParsedQuery {
-        val terms = query.lowercase().trim().split(Regex("\\s+")).filter { it.isNotEmpty() }
+        // Accept "," and ";" as separators too: "male:x; female:y" == "male:x female:y"
+        val terms = query.lowercase().replace(Regex("[,;]+"), " ").trim()
+            .split(Regex("\\s+")).filter { it.isNotEmpty() }
         val positive = mutableListOf<String>()
         val negative = mutableListOf<String>()
         val orGroups = mutableListOf(mutableListOf<String>())
