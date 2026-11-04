@@ -52,7 +52,10 @@ class NHentai(
 
     // cloudflareClient lets the app solve a Cloudflare challenge in a WebView if one ever shows up.
     override val client: OkHttpClient by lazy {
-        network.cloudflareClient.newBuilder()
+        val builder = network.cloudflareClient.newBuilder()
+        // French ISPs block nhentai at the DNS level (fake answer -> TLS error): resolve through DoH instead.
+        if (preferences.getBoolean(PREF_DOH, true)) builder.dns(DohDns(network.client))
+        builder
             .addInterceptor(::apiRateLimit)
             .addInterceptor(::serverFailover)
             .build()
@@ -385,11 +388,19 @@ class NHentai(
             setDefaultValue("popular-week")
             summary = "%s"
         }.also(screen::addPreference)
+
+        androidx.preference.SwitchPreferenceCompat(screen.context).apply {
+            key = PREF_DOH
+            title = "DNS over HTTPS (Cloudflare / Google)"
+            summary = "Fixes the TLS error when your ISP blocks nhentai at the DNS level. Restart the app after changing."
+            setDefaultValue(true)
+        }.also(screen::addPreference)
     }
 
     companion object {
         private const val PREF_TITLE = "pref_title_display"
         private const val PREF_POPULAR = "pref_popular_period"
+        private const val PREF_DOH = "pref_dns_over_https"
 
         private val SERVER_HOST = Regex("""[it]\d\.nhentai\.net""")
 

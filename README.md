@@ -57,7 +57,7 @@ Elle utilise l'API officielle v2 (`/api/v2/search`, `/api/v2/galleries/{id}`).
 | ID / lien | `177013`, `id:177013` ou un lien nhentai.net/g/… |
 | Limite | L'API n'autorise que **15 requêtes par minute**. L'extension espace les appels toute seule et garde chaque galerie en cache 10 minutes : une galerie ouverte coûte 1 requête au lieu de 3. Si tu enchaînes beaucoup de pages très vite, un chargement peut attendre quelques secondes. |
 | Images | 4 serveurs (`i1` à `i4`). Si l'un tombe, l'extension bascule automatiquement sur un autre. Les images ne sont pas limitées. |
-| France | Testé depuis une connexion française : l'API, les images et les miniatures répondent directement, sans blocage. Si Cloudflare affiche un jour une vérification, l'app l'ouvre dans sa WebView. |
+| France | Les opérateurs français bloquent nhentai au niveau DNS : leur DNS renvoie une fausse adresse, ce qui donne une « erreur TLS ». La source résout donc les adresses en **DNS over HTTPS** (Cloudflare, puis Google). Réglage activé par défaut, désactivable dans les paramètres de la source. Si Cloudflare affiche une vérification, l'app l'ouvre dans sa WebView. |
 
 Une galerie correspond à un manga avec un seul chapitre. L'URL réelle de chaque image est calculée
 au moment de la lecture, parce que `gg.js` change régulièrement côté site.
