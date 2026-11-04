@@ -1,11 +1,11 @@
 [
   {
-    "name": "Tachiyomi: Hitomi",
+    "name": "Tachiyomi: Hitomi & nhentai",
     "pkg": "eu.kanade.tachiyomi.extension.all.hitomi",
-    "apk": "tachiyomi-all.hitomi-v1.4.2.apk",
+    "apk": "tachiyomi-all.hitomi-v1.4.3.apk",
     "lang": "all",
-    "code": 2,
-    "version": "1.4.2",
+    "code": 3,
+    "version": "1.4.3",
     "nsfw": 1,
     "sources": [
       {
@@ -139,6 +139,30 @@
         "lang": "tl",
         "id": "414307805350498248",
         "baseUrl": "https://hitomi.la"
+      },
+      {
+        "name": "nhentai.net",
+        "lang": "all",
+        "id": "8026778878849051794",
+        "baseUrl": "https://nhentai.net"
+      },
+      {
+        "name": "nhentai.net",
+        "lang": "en",
+        "id": "345317375019780275",
+        "baseUrl": "https://nhentai.net"
+      },
+      {
+        "name": "nhentai.net",
+        "lang": "ja",
+        "id": "7225155218445973824",
+        "baseUrl": "https://nhentai.net"
+      },
+      {
+        "name": "nhentai.net",
+        "lang": "zh",
+        "id": "8489806541346011412",
+        "baseUrl": "https://nhentai.net"
       }
     ]
   }
