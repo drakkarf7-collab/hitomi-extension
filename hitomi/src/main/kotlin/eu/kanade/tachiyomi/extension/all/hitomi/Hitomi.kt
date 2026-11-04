@@ -16,11 +16,7 @@ import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.model.UpdateStrategy
 import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonObject
 import okhttp3.Headers
 import okhttp3.Request
@@ -289,21 +285,6 @@ class Hitomi(
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request =
         throw UnsupportedOperationException()
     override fun searchMangaParse(response: Response): MangasPage = throw UnsupportedOperationException()
-
-    // ============================== Json helpers =========================
-
-    private fun JsonElement?.jsonObjectOrNull(): JsonObject? = this as? JsonObject
-
-    private fun JsonObject.str(key: String): String? =
-        (this[key] as? JsonPrimitive)?.takeIf { it !is JsonNull }?.content
-
-    private fun JsonObject.arr(key: String): List<JsonElement> = (this[key] as? JsonArray) ?: emptyList()
-
-    /** Hitomi encodes booleans as "1", 1, "" or null. */
-    private fun JsonObject.flag(key: String): Boolean = str(key).let { it == "1" || it == "true" }
-
-    private fun JsonObject.names(key: String, field: String): List<String> =
-        arr(key).mapNotNull { it.jsonObjectOrNull()?.str(field) }
 
     companion object {
         private const val PREF_IMAGE_FORMAT = "pref_image_format"

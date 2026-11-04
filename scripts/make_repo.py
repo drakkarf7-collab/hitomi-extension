@@ -70,11 +70,21 @@ def main() -> None:
         raise SystemExit(f"APK not found: {apk} (run ./gradlew assembleRelease first)")
 
     factory = (MODULE / "src/main/kotlin/eu/kanade/tachiyomi/extension/all/hitomi/HitomiFactory.kt").read_text(encoding="utf-8")
-    langs = re.findall(r'"([A-Za-z-]+)" to "[a-z]+"', factory)
 
-    base_url = "https://hitomi.la"
+    def langs_of(list_name: str) -> list[str]:
+        block = re.search(rf"val {list_name} = listOf\((.*?)\n\s*\)", factory, re.S)
+        if not block:
+            raise SystemExit(f"{list_name} not found in HitomiFactory.kt")
+        return re.findall(r'"([A-Za-z-]+)" to "[a-z]*"', block.group(1))
+
+    # (source name, base url, languages) - must match HitomiFactory / the source classes
+    source_sets = [
+        ("Hitomi", "https://hitomi.la", langs_of("LANGUAGES")),
+        ("nhentai.net", "https://nhentai.net", langs_of("NHENTAI_LANGUAGES")),
+    ]
     sources = [
-        {"name": ext_name, "lang": lang, "id": str(source_id(ext_name, lang)), "baseUrl": base_url}
+        {"name": name, "lang": lang, "id": str(source_id(name, lang)), "baseUrl": base_url}
+        for name, base_url, langs in source_sets
         for lang in langs
     ]
 

@@ -43,6 +43,22 @@ Tachimanga : **Réglages → Dépôts d'extensions (Extension repos) → Ajouter
 | Format | WebP par défaut, AVIF en option |
 | Langues | all, en, ja, zh, ko, fr, es, de, it, pt-BR, ru, pl, id, vi, th, tr, uk, ar, hu, cs, nl, tl |
 
+### Source nhentai.net
+
+Elle s'appelle **nhentai.net** dans l'app, en 4 langues : all, en, ja, zh (nhentai n'en propose pas d'autres).
+Elle utilise l'API officielle v2 (`/api/v2/search`, `/api/v2/galleries/{id}`).
+
+| Fonction | Détail |
+|---|---|
+| Populaire | Aujourd'hui, semaine (par défaut), mois ou tout le temps, réglable |
+| Récent | Les dernières galeries ajoutées |
+| Recherche | Syntaxe nhentai : `tag:big-breasts -tag:futanari artist:shindol parody:blue-archive` (tirets à la place des espaces) |
+| Filtres | Tri, catégorie, tags, artistes, groupes, parodies, personnages (séparés par `,` ou `;`, `-` pour exclure) |
+| ID / lien | `177013`, `id:177013` ou un lien nhentai.net/g/… |
+| Limite | L'API n'autorise que **15 requêtes par minute**. L'extension espace les appels toute seule et garde chaque galerie en cache 10 minutes : une galerie ouverte coûte 1 requête au lieu de 3. Si tu enchaînes beaucoup de pages très vite, un chargement peut attendre quelques secondes. |
+| Images | 4 serveurs (`i1` à `i4`). Si l'un tombe, l'extension bascule automatiquement sur un autre. Les images ne sont pas limitées. |
+| France | Testé depuis une connexion française : l'API, les images et les miniatures répondent directement, sans blocage. Si Cloudflare affiche un jour une vérification, l'app l'ouvre dans sa WebView. |
+
 Une galerie correspond à un manga avec un seul chapitre. L'URL réelle de chaque image est calculée
 au moment de la lecture, parce que `gg.js` change régulièrement côté site.
 
