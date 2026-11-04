@@ -81,6 +81,7 @@ def main() -> None:
     source_sets = [
         ("Hitomi", "https://hitomi.la", langs_of("LANGUAGES")),
         ("nhentai.net", "https://nhentai.net", langs_of("NHENTAI_LANGUAGES")),
+        ("Schale Network (Anchira)", "https://niyaniya.moe", ["all"]),
     ]
     sources = [
         {"name": name, "lang": lang, "id": str(source_id(name, lang)), "baseUrl": base_url}

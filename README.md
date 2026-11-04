@@ -59,6 +59,36 @@ Elle utilise l'API officielle v2 (`/api/v2/search`, `/api/v2/galleries/{id}`).
 | Images | 4 serveurs (`i1` à `i4`). Si l'un tombe, l'extension bascule automatiquement sur un autre. Les images ne sont pas limitées. |
 | France | Les opérateurs français bloquent nhentai au niveau DNS : leur DNS renvoie une fausse adresse, ce qui donne une « erreur TLS ». La source résout donc les adresses en **DNS over HTTPS** (Cloudflare, puis Google). Réglage activé par défaut, désactivable dans les paramètres de la source. Si Cloudflare affiche une vérification, l'app l'ouvre dans sa WebView. |
 
+### Source Schale Network (ex-anchira.to)
+
+anchira.to n'existe plus. Le site est devenu koharu.to, puis **Schale Network** (niyaniya.moe). La source
+s'appelle **Schale Network (Anchira)**.
+
+| Fonction | Jeton nécessaire ? |
+|---|---|
+| Récent, populaire, tri (vues, favoris, titre, pages) | Non |
+| Fiche d'une galerie, couverture, tags | Non |
+| Recherche texte / filtres de tags | **Oui** |
+| Lecture des pages | **Oui** |
+
+Le site protège la recherche et la lecture par une vérification Cloudflare Turnstile, qui donne un jeton
+« clearance ». L'extension ne résout pas cette vérification : tu la passes toi-même dans ton navigateur,
+puis tu colles le jeton dans les réglages de la source.
+
+**Récupérer le jeton sur iPhone (Safari) :**
+1. Crée un favori sur n'importe quelle page, puis modifie-le : nomme-le `Jeton Schale` et remplace l'adresse par :
+   ```
+   javascript:prompt('Jeton clearance',localStorage.getItem('clearance'))
+   ```
+2. Ouvre https://niyaniya.moe, lance une recherche ou ouvre une galerie et passe la vérification si elle s'affiche.
+3. Toujours sur niyaniya.moe, touche le favori `Jeton Schale` : une fenêtre affiche le jeton. Copie-le.
+   Si elle affiche `null`, la vérification n'a pas encore été passée : refais l'étape 2.
+4. Dans Tachimanga : Extensions → Schale Network (Anchira) → réglages → **Clearance token** → colle.
+
+Sur PC : console du navigateur (F12) sur niyaniya.moe → `localStorage.getItem('clearance')`.
+
+Le jeton expire. Quand la source affiche « paste a new clearance token », recommence les étapes 2 à 4.
+
 Une galerie correspond à un manga avec un seul chapitre. L'URL réelle de chaque image est calculée
 au moment de la lecture, parce que `gg.js` change régulièrement côté site.
 

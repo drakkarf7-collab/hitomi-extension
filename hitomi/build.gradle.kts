@@ -7,9 +7,9 @@ plugins {
 }
 
 // ---- Extension metadata -------------------------------------------------
-val extName = "Hitomi & nhentai"
+val extName = "Hitomi, nhentai & Schale"
 val pkgName = "eu.kanade.tachiyomi.extension.all.hitomi"
-val extVersionCode = 5
+val extVersionCode = 6
 val libVersion = "1.4" // most compatible extension API (Mihon, Tachimanga, forks)
 val extVersionName = "$libVersion.$extVersionCode"
 // -------------------------------------------------------------------------

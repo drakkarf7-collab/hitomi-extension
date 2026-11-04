@@ -6,7 +6,8 @@ import eu.kanade.tachiyomi.source.SourceFactory
 class HitomiFactory : SourceFactory {
     override fun createSources(): List<Source> =
         LANGUAGES.map { (lang, hitomiLang) -> Hitomi(lang, hitomiLang) } +
-            NHENTAI_LANGUAGES.map { (lang, nhLang) -> NHentai(lang, nhLang) }
+            NHENTAI_LANGUAGES.map { (lang, nhLang) -> NHentai(lang, nhLang) } +
+            SchaleNetwork()
 
     companion object {
         /** App language code to Hitomi language name. */
