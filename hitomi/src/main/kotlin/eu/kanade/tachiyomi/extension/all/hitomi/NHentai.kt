@@ -443,9 +443,16 @@ private class NhCategoryFilter : Filter.Select<String>("Category", CATEGORIES.ma
 /** "Hatsune Miku" -> "hatsune-miku": the only form that works for every namespace (quotes fail for characters). */
 private fun nhSlug(value: String) = value.trim().lowercase().replace("\"", "").replace(Regex("""[\s_]+"""), "-")
 
-/** Search box: `character:"hatsune miku"` -> `character:hatsune-miku` */
-private fun normalizeNhQuery(query: String) =
-    query.replace(Regex("""(-?\w+):"([^"]+)"""")) { "${it.groupValues[1]}:${nhSlug(it.groupValues[2])}" }
+/**
+ * Search box:
+ * - `character:"hatsune miku"` -> `character:hatsune-miku`
+ * - Hitomi style `female:monster_girl` / `male:x` -> `tag:monster-girl` / `tag:x` (nhentai only has `tag:`)
+ * - `tag:big_breasts` -> `tag:big-breasts`
+ */
+private fun normalizeNhQuery(query: String) = query
+    .replace(Regex("""(-?\w+):"([^"]+)"""")) { "${it.groupValues[1]}:${nhSlug(it.groupValues[2])}" }
+    .replace(Regex("""(^|\s)(-?)(?:fe)?male:""")) { "${it.groupValues[1]}${it.groupValues[2]}tag:" }
+    .replace(Regex("""(\w+):(\S+)""")) { "${it.groupValues[1]}:${it.groupValues[2].replace('_', '-')}" }
 
 private class NhTermFilter(name: String, private val namespace: String) : Filter.Text(name) {
     /** "big breasts, -futanari" -> tag:big-breasts -tag:futanari */
@@ -454,6 +461,8 @@ private class NhTermFilter(name: String, private val namespace: String) : Filter
         .filter { it.isNotEmpty() }
         .map { value ->
             val exclude = value.startsWith("-")
-            "${if (exclude) "-" else ""}$namespace:${nhSlug(value.removePrefix("-"))}"
+            // "female:monster girl" typed in the Tags field -> tag:monster-girl
+            val clean = value.removePrefix("-").trim().replace(Regex("""^(?:fe)?male:|^tag:"""), "")
+            "${if (exclude) "-" else ""}$namespace:${nhSlug(clean)}"
         }
 }
