@@ -1,11 +1,11 @@
 [
   {
-    "name": "Tachiyomi: Hitomi & nhentai",
+    "name": "Tachiyomi: Hitomi, nhentai & Schale",
     "pkg": "eu.kanade.tachiyomi.extension.all.hitomi",
-    "apk": "tachiyomi-all.hitomi-v1.4.5.apk",
+    "apk": "tachiyomi-all.hitomi-v1.4.6.apk",
     "lang": "all",
-    "code": 5,
-    "version": "1.4.5",
+    "code": 6,
+    "version": "1.4.6",
     "nsfw": 1,
     "sources": [
       {
@@ -163,6 +163,12 @@
         "lang": "zh",
         "id": "8489806541346011412",
         "baseUrl": "https://nhentai.net"
+      },
+      {
+        "name": "Schale Network (Anchira)",
+        "lang": "all",
+        "id": "5056912624618304584",
+        "baseUrl": "https://niyaniya.moe"
       }
     ]
   }
